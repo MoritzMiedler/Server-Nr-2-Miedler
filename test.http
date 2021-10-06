@@ -1,0 +1,14 @@
+DELETE http://localhost:3000/carsssss/2
+###
+DELETE http://localhost:3000/cars/4
+###
+patch http://localhost:3000/cars/1
+Content-Type: application/json
+
+{
+    "status": "sold",
+    "title": "VERKAUFT"
+}
+###
+get http://localhost:3000/cars
+###
