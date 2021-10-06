@@ -11,7 +11,7 @@ async function getCars() {
 async function deleteCar(id) {
   const { rowCount } = await db.query('delete from cars where id = $1;', [id]);
   console.log(rowCount);
-  if ((rowCount = 1)) {
+  if (rowCount === 1) {
     return {
       code: 200,
       data: 'Car deleted',
@@ -29,7 +29,7 @@ async function getOwnerId(owner) {
       owner.firstName,
       owner.lastName,
     ]);
-    return rows.id;
+    return rows[0].id;
   } catch (err) {
     return null;
   }
@@ -38,7 +38,7 @@ async function getOwnerId(owner) {
 async function addCar(e) {
   try {
     const { rows } = await db.query('select max(id) as max from cars');
-    const carId = rows[0].max;
+    const carId = rows[0].max + 1;
 
     const id = await getOwnerId(e.owner);
 
@@ -78,13 +78,13 @@ async function changeStatusCar(id, data) {
 
     const props = [];
     for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(key)) {
-        props.push(`${key}='${data}'`);
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        props.push(`${key}='${data[key]}'`);
       }
     }
 
-    const cmd = `Update cars set ${props} where id = $1`;
-    await db.query([id]);
+    const cmd = `Update cars set ${props.join(',')} where id = $1`;
+    await db.query(cmd, [id]);
 
     return {
       code: 200,
@@ -93,7 +93,9 @@ async function changeStatusCar(id, data) {
   } catch (err) {
     return {
       code: 500,
-      data: `Error while editing car. Error: ${err}`,
+      data: `Error while editing car. Error: ${err.message}`,
     };
   }
 }
+
+module.exports = { getCars, deleteCar, addCar, changeStatusCar };
