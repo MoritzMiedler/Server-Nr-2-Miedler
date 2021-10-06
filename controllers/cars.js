@@ -7,7 +7,7 @@ const getCars = asyncHandler(async (req, res) => {
 });
 
 const deleteCar = asyncHandler(async (req, res) => {
-  const { code, data } = await carModel.deleteCar(req.id);
+  const { code, data } = await carModel.deleteCar(req.params.id);
   res.status(code).json(data);
 });
 
@@ -17,7 +17,7 @@ const addCar = asyncHandler(async (req, res) => {
 });
 
 const changeStatusCar = asyncHandler(async (req, res) => {
-  const { code, data } = await carModel.changeStatusCar(req.id, req.body);
+  const { code, data } = await carModel.changeStatusCar(req.params.id, req.body);
   res.status(code).json(data);
 });
 
